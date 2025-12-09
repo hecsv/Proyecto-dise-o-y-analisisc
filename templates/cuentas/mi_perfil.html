@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Mi perfil{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Mi perfil</h2>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Usuario</h5>
+    </div>
+    <div class="card-body">
+        <p class="mb-1"><strong>Usuario:</strong> {{ request.user.username }}</p>
+        <p class="mb-1"><strong>Nombre:</strong> {{ request.user.first_name }} {{ request.user.last_name }}</p>
+        <p class="mb-0"><strong>Correo:</strong> {{ request.user.email }}</p>
+    </div>
+</div>
+
+{% if cuenta %}
+<div class="card shadow-sm">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Cuenta en la clínica</h5>
+    </div>
+    <div class="card-body">
+        <p class="mb-1"><strong>Rol:</strong> {{ cuenta.get_rol_display }}</p>
+        <p class="mb-1"><strong>Teléfono:</strong> {{ cuenta.telefono|default:"(no capturado)" }}</p>
+        <p class="mb-0"><strong>Notas:</strong> {{ cuenta.notas|default:"(sin notas)" }}</p>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-warning">
+    Tu usuario no tiene una cuenta asociada todavía.
+</div>
+{% endif %}
+{% endblock %}

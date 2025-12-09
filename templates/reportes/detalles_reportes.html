@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Reporte {{ reporte.fecha_reporte|date:"F Y" }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+        Reporte mensual · {{ reporte.fecha_reporte|date:"F Y" }}
+    </h2>
+    <a href="{% url 'lista_reportes' %}" class="btn btn-outline-secondary">
+        Volver a la lista
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Pacientes</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1">
+                    <span class="text-muted">Total registrados:</span>
+                    <strong>{{ reporte.total_pacientes }}</strong>
+                </p>
+                <p class="mb-0">
+                    <span class="text-muted">Nuevos en el mes:</span>
+                    <strong>{{ reporte.pacientes_nuevos_mes }}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Tratamientos</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1">
+                    <span class="text-muted">Iniciados en el mes:</span>
+                    <strong>{{ reporte.tratamientos_iniciados }}</strong>
+                </p>
+                <p class="mb-0">
+                    <span class="text-muted">Completados en el mes:</span>
+                    <strong>{{ reporte.tratamientos_completados }}</strong>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">Inventario</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1">
+                    <span class="text-muted">Productos con bajo stock:</span>
+                    {% if reporte.productos_bajo_stock > 0 %}
+                        <span class="badge bg-danger">
+                            {{ reporte.productos_bajo_stock }} productos
+                        </span>
+                    {% else %}
+                        <span class="badge bg-success">
+                            Todo en orden
+                        </span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if reporte.observaciones %}
+<hr class="my-4">
+<div class="card shadow-sm">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Observaciones</h5>
+    </div>
+    <div class="card-body">
+        <p class="mb-0">{{ reporte.observaciones }}</p>
+    </div>
+</div>
+{% endif %}
+
+<p class="text-muted small mt-4">
+    Reporte generado el {{ reporte.fecha_generacion|date:"d/m/Y H:i" }}.
+</p>
+{% endblock %}

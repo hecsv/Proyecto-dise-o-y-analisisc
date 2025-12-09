@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Registrar nuevo paciente{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mx-auto" style="max-width: 650px;">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <span class="me-2">👤</span>
+        <h5 class="mb-0">Registrar nuevo paciente</h5>
+    </div>
+
+    <div class="card-body">
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger mb-3">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.nombre.id_for_label }}">Nombre</label>
+                {{ form.nombre }}
+                <div class="text-danger small">{{ form.nombre.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.apellidos.id_for_label }}">Apellidos</label>
+                {{ form.apellidos }}
+                <div class="text-danger small">{{ form.apellidos.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.fecha_nacimiento.id_for_label }}">
+                    Fecha de nacimiento
+                </label>
+                {{ form.fecha_nacimiento }}
+                <div class="text-danger small">{{ form.fecha_nacimiento.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.sexo.id_for_label }}">Sexo</label>
+                {{ form.sexo }}
+                <div class="text-danger small">{{ form.sexo.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.telefono.id_for_label }}">Teléfono</label>
+                {{ form.telefono }}
+                <div class="text-danger small">{{ form.telefono.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.email.id_for_label }}">Email</label>
+                {{ form.email }}
+                <div class="text-danger small">{{ form.email.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.direccion.id_for_label }}">Dirección</label>
+                {{ form.direccion }}
+                <div class="text-danger small">{{ form.direccion.errors }}</div>
+            </div>
+
+            <div class="form-check mb-4">
+                {{ form.activo }}
+                <label class="form-check-label ms-1" for="{{ form.activo.id_for_label }}">
+                    Paciente activo
+                </label>
+                <div class="text-danger small">{{ form.activo.errors }}</div>
+            </div>
+
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary px-5 me-2">
+                    Guardar paciente
+                </button>
+                <a href="{% url 'lista_pacientes' %}" class="btn btn-outline-secondary px-5">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <div class="card-footer text-muted small text-end">
+        Gestión de pacientes · Clínica Dental
+    </div>
+</div>
+{% endblock %}

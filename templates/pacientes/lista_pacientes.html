@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}Pacientes - Clínica Dental{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">Pacientes</h2>
+    <a href="{% url 'crear_paciente' %}" class="btn btn-primary">
+        + Nuevo paciente
+    </a>
+</div>
+
+<table class="table table-striped table-hover align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Nombre completo</th>
+            <th>Sexo</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Activo</th>
+            <th>Registrado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for paciente in pacientes %}
+        <tr>
+            <td>{{ paciente.nombre }} {{ paciente.apellidos }}</td>
+            <td>{{ paciente.get_sexo_display|default:"—" }}</td>
+            <td>{{ paciente.telefono|default:"—" }}</td>
+            <td>{{ paciente.email|default:"—" }}</td>
+            <td>
+                {% if paciente.activo %}
+                    <span class="badge bg-success">Activo</span>
+                {% else %}
+                    <span class="badge bg-secondary">Inactivo</span>
+                {% endif %}
+            </td>
+            <td>{{ paciente.fecha_registro|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center text-muted">
+                No hay pacientes registrados.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

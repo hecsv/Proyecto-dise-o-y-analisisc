@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Agendar nueva cita{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mx-auto" style="max-width: 650px;">
+    <div class="card-header bg-primary text-white d-flex align-items-center">
+        <span class="me-2">📅</span>
+        <h5 class="mb-0">Agendar Nueva Cita</h5>
+    </div>
+
+    <div class="card-body">
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger mb-3">
+            {{ form.non_field_errors }}
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            
+            <h6 class="mb-4 mt-1" style="font-size: 21px; color: grey; font-family:if;" 'Times New Roman', ser>Datos del paciente</h6>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.paciente.id_for_label }}">Paciente</label>
+                {{ form.paciente }}
+                <div class="text-danger small">{{ form.paciente.errors }}</div>
+            </div>
+
+           
+
+            <hr>
+
+           
+            <h6 class="mb-3 mt-2" style="font-size: 21px; color: grey; font-family:if;" 'Times New Roman', ser>Fecha y horario</h6>
+            
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.fecha.id_for_label }}">Fecha</label>
+                {{ form.fecha }}
+                <div class="text-danger small">{{ form.fecha.errors }}</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.hora_inicio.id_for_label }}">Hora de inicio</label>
+                {{ form.hora_inicio }}
+                <div class="text-danger small">{{ form.hora_inicio.errors }}</div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold" for="{{ form.hora_fin.id_for_label }}">Hora de fin</label>
+                {{ form.hora_fin }}
+                <div class="text-danger small">{{ form.hora_fin.errors }}</div>
+            </div>
+
+            <hr>
+
+            
+            <h6 class="mb-3 mt-2" style="font-size: 21px; color: grey; font-family:if;" 'Times New Roman', ser>Detalles de la cita</h6>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold" for="{{ form.motivo.id_for_label }}">Motivo</label>
+                {{ form.motivo }}
+                <div class="text-danger small">{{ form.motivo.errors }}</div>
+            </div>
+
+            
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold d-block" for="{{ form.observaciones.id_for_label }}">Observaciones</label>
+                {{ form.observaciones }}
+                <div class="text-danger small">{{ form.observaciones.errors }}</div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold" for="{{ form.estado.id_for_label }}">Estado inicial</label>
+                {{ form.estado }}
+                <div class="text-danger small">{{ form.estado.errors }}</div>
+            </div>
+
+          
+            <div class="text-center mt-3">
+                <button type="submit" class="btn btn-primary px-5 me-2">
+                    Guardar cita
+                </button>
+                <a href="{% url 'lista_citas' %}" class="btn btn-outline-secondary px-5">
+                    Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card-footer text-muted small text-end">
+        Gestión de citas · Clínica Dental
+    </div>
+</div>
+{% endblock %}

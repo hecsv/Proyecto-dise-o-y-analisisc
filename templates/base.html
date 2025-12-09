@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Clínica Dental{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4 shadow">
+        <div class="container">
+            
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                <i class="fas fa-tooth"></i> Clínica Dental
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                {% if request.user.is_authenticated %}
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Inicio</a>
+                    </li>
+
+                    {% if request.user.is_superuser or request.user.cuenta %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'lista_pacientes' %}">Pacientes</a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'lista_citas' %}">Citas</a>
+                        </li>
+                    {% endif %}
+
+                    {% if request.user.cuenta.rol == 'RECEP' or request.user.is_superuser %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Facturación
+                            </a>
+                            <ul class="dropdown-menu border-0 shadow">
+                                <li><a class="dropdown-item" href="{% url 'lista_pagos' %}">Pagos</a></li>
+                                <li><a class="dropdown-item" href="{% url 'lista_facturas' %}">Facturas</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    {% if request.user.cuenta.rol == 'ODONTO' or request.user.is_superuser %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Inventario
+                            </a>
+                            <ul class="dropdown-menu border-0 shadow">
+                                <li><a class="dropdown-item" href="{% url 'lista_productos' %}">Productos</a></li>
+                                <li><a class="dropdown-item" href="{% url 'lista_proveedores' %}">Proveedores</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'lista_movimientos' %}">Movimientos</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+
+                    {% if request.user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'lista_reportes' %}">Reportes</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-3">
+                        <span class="navbar-text text-white">
+                            <small>Hola,</small> <strong>{{ request.user.first_name|default:request.user.username|title }}</strong>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <form action="{% url 'logout' %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-light text-primary fw-bold shadow-sm rounded-pill px-3">
+                                Salir <i class="fas fa-sign-out-alt ms-1"></i>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+                {% else %}
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-white fw-bold" href="{% url 'login' %}">Iniciar Sesión</a>
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="bg-white p-4 p-md-5 rounded shadow-sm border">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

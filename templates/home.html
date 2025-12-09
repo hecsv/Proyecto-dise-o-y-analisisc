@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if rol_usuario == 'PACIENTE' %}
+<div class="text-center mb-5">
+    <h1 class="fw-bold text-primary">Bienvenido, {{ user.first_name }} 👋</h1>
+    <p class="text-muted">Gestiona tu salud dental desde aquí.</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card shadow border-0">
+            <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="m-0 fw-bold"><i class="fas fa-calendar-check me-2"></i> Mis Próximas Citas</h5>
+                <div>
+                    <a href="{% url 'historial_clinico' %}" class="btn btn-sm btn-outline-light me-2">Historial</a>
+                    <a href="{% url 'crear_cita_paciente' %}" class="btn btn-sm btn-light text-primary fw-bold">+ Agendar Nueva</a>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                {% if mis_citas %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Fecha</th>
+                                <th>Hora</th>
+                                <th>Doctor</th>
+                                <th>Motivo</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cita in mis_citas %}
+                            <tr>
+                                <td class="ps-4 fw-bold">{{ cita.fecha|date:"d M Y" }}</td>
+                                <td class="text-primary fw-bold">{{ cita.hora_inicio|time:"H:i" }}</td>
+                                <td>Dr. {{ cita.odontologo.last_name }}</td>
+                                <td>{{ cita.motivo }}</td>
+                                <td>
+                                    {% if cita.estado == 'pendiente' %}
+                                    <span class="badge bg-warning text-dark">Pendiente</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ cita.estado }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <img src="https://cdn-icons-png.flaticon.com/512/7486/7486831.png" alt="Relax" width="80" class="mb-3 opacity-50">
+                    <h5 class="text-muted">No tienes citas programadas</h5>
+                    <p class="small text-muted">¿Te duele algo? Agenda una cita ahora.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+
+<div class="mb-4">
+  <h2 class="fw-bold text-dark">Bienvenido, {{ user.first_name|default:user.username }} </h2>
+  <p class="text-muted">
+    {% if rol_usuario == 'ODONTO' %}📅 Esta es tu agenda personal para hoy:
+    {% else %}📢 Resumen administrativo del día:
+    {% endif %}
+    <span class="fw-bold text-primary">{{ fecha_hoy|date:"l d \d\e F \d\e Y" }}</span>
+  </p>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100 py-2 border-start border-5 border-primary">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="text-xs fw-bold text-primary text-uppercase mb-1">Citas para Hoy</div>
+            <div class="h3 mb-0 fw-bold text-gray-800">{{ citas_hoy }}</div>
+          </div>
+          <div class="col-auto"><span style="font-size: 2.5rem;">📅</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100 py-2 border-start border-5 border-success">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="text-xs fw-bold text-success text-uppercase mb-1">Pacientes Totales</div>
+            <div class="h3 mb-0 fw-bold text-gray-800">{{ total_pacientes }}</div>
+          </div>
+          <div class="col-auto"><span style="font-size: 2.5rem;">👥</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card border-0 shadow-sm h-100 py-2 border-start border-5 border-danger">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col">
+            <div class="text-xs fw-bold text-danger text-uppercase mb-1">Bajo Stock</div>
+            <div class="h3 mb-0 fw-bold text-gray-800">{{ productos_alerta }}</div>
+          </div>
+          <div class="col-auto"><span style="font-size: 2.5rem;">⚠️</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8 mb-4">
+    <div class="card shadow-sm border-0">
+      <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+        <h6 class="m-0 fw-bold text-primary">Agenda del Día</h6>
+        <a href="{% url 'crear_cita' %}" class="btn btn-sm btn-primary rounded-pill px-3">+ Nueva Cita</a>
+      </div>
+      <div class="card-body p-0">
+        {% if proximas_citas %}
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0">
+            <thead class="bg-light text-secondary small text-uppercase">
+              <tr>
+                <th class="ps-4">Hora</th>
+                <th>Paciente</th>
+                <th>Motivo</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cita in proximas_citas %}
+              <tr>
+                <td class="ps-4 fw-bold text-dark">{{ cita.hora_inicio|time:"H:i" }}</td>
+                <td>{{ cita.paciente }}</td>
+                <td class="text-muted small">{{ cita.motivo|default:"Consulta General" }}</td>
+                <td><span class="badge bg-warning text-dark">Pendiente</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+          <p class="text-muted mb-0">No hay citas pendientes para el resto del día.</p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4 mb-4">
+    <div class="card shadow-sm border-0 mb-4">
+      <div class="card-header py-3 bg-white">
+        <h6 class="m-0 fw-bold text-primary">Accesos Rápidos</h6>
+      </div>
+      <div class="card-body">
+        <div class="d-grid gap-2">
+          {% if rol_usuario == 'RECEP' or rol_usuario == 'ADMIN' or user.is_superuser %}
+          <a href="{% url 'crear_paciente' %}" class="btn btn-outline-success text-start p-3">
+            👤 <strong>Registrar Nuevo Paciente</strong>
+          </a>
+          {% endif %}
+          <a href="{% url 'lista_productos' %}" class="btn btn-outline-secondary text-start p-3">
+            📦 <strong>Revisar Inventario</strong>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}
